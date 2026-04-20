@@ -22,7 +22,6 @@ function initStats() {
   const avgRate = sessions.length > 0
     ? Math.round(sessions.reduce((a, s) => a + s.focusRate, 0) / sessions.length)
     : 0;
-  const totalPoints = sessions.reduce((a, s) => a + s.pointsEarned, 0);
   const todaySessions = sessions.filter(s => isToday(s.date));
   const todayFocused = todaySessions.reduce((a, s) => a + s.focusedTime, 0);
 
@@ -32,7 +31,6 @@ function initStats() {
   if (sessions.length > 0) document.getElementById('kpi-avg-rate').className = `stats-kpi-value ${rateClass(avgRate)}`;
   document.getElementById('kpi-total-sessions').textContent = sessions.length > 0 ? `${sessions.length}회` : '-';
   document.getElementById('kpi-today-sessions').textContent = `오늘 ${todaySessions.length}회`;
-  document.getElementById('kpi-points').textContent = totalPoints > 0 ? `${totalPoints.toLocaleString()}P` : '-';
 
   // 주간 차트
   renderWeeklyChart(weeklyChart);
@@ -134,7 +132,7 @@ function renderPage(page) {
 
   let html = `<div class="stats-table-wrap">
     <table class="stats-table">
-      <thead><tr><th>날짜</th><th>시간</th><th>세션 길이</th><th>집중률</th><th>집중 시간</th><th>포인트</th></tr></thead>
+      <thead><tr><th>날짜</th><th>시간</th><th>세션 길이</th><th>집중률</th><th>집중 시간</th></tr></thead>
       <tbody>
         ${paged.map(s => {
           const total = s.focusedTime + s.distractedTime;
@@ -150,7 +148,6 @@ function renderPage(page) {
               </div>
             </td>
             <td>${fmtSec(s.focusedTime)}</td>
-            <td class="stats-td-points">+${s.pointsEarned}P</td>
           </tr>`;
         }).join('')}
       </tbody>

@@ -1,7 +1,7 @@
 // mypage.js — 마이페이지 UI
 
 // TODO: API 연동
-// GET /api/users/me → { nickname, email, createdAt, points }
+// GET /api/users/me → { nickname, email, createdAt }
 // GET /api/sessions → SessionRecord[]
 // PUT /api/users/me/nickname → { nickname }
 // PUT /api/users/me/password → { currentPassword, newPassword }
@@ -29,12 +29,9 @@ function initMyPage() {
   const avgRate = sessions.length > 0
     ? Math.round(sessions.reduce((a, s) => a + s.focusRate, 0) / sessions.length)
     : 0;
-  const totalPoints = sessions.reduce((a, s) => a + s.pointsEarned, 0);
-
   document.getElementById('my-total-time').textContent = totalFocused > 0 ? fmtSec(totalFocused) : '-';
   document.getElementById('my-total-sessions').textContent = sessions.length > 0 ? `${sessions.length}회` : '-';
   document.getElementById('my-avg-rate').textContent = sessions.length > 0 ? `${avgRate}%` : '-';
-  document.getElementById('my-points').textContent = totalPoints > 0 ? `${totalPoints.toLocaleString()}P` : '-';
 }
 
 // ── 프로필 사진 ────────────────────────────────────────────

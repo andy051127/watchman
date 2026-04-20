@@ -70,10 +70,6 @@
   animation: pulse 1.5s ease-in-out infinite;
 }
 .session-nav-right { display: flex; align-items: center; gap: 12px; }
-.nav-points { display: flex; align-items: center; gap: 5px; font-size: 14px; }
-.nav-points-icon { font-size: 14px; }
-.nav-points-total { font-weight: 700; color: var(--text); }
-.nav-points-session { font-size: 12px; font-weight: 700; color: var(--primary); }
 .session-nav-timer { font-size: 15px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text); letter-spacing: -0.5px; }
 .btn-session-exit {
   padding: 7px 16px;
@@ -188,44 +184,6 @@
 /* Sidebar */
 .session-sidebar { width: 280px; display: flex; flex-direction: column; gap: 14px; flex-shrink: 0; }
 .ssc-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); margin-bottom: 10px; }
-
-/* Reward Card */
-.reward-card {
-  background: var(--bg-white);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: 18px;
-}
-.guest-reward-card {
-  text-align: center;
-  padding: 20px;
-  color: var(--text-muted);
-}
-.guest-lock-icon { font-size: 24px; display: block; margin-bottom: 6px; }
-.guest-reward-msg { font-size: 13px; line-height: 1.5; }
-.reward-card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-.reward-total { display: flex; align-items: baseline; gap: 4px; margin-top: 4px; }
-.reward-icon { font-size: 16px; }
-.reward-num { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--text); }
-.reward-unit { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-.reward-session-badge {
-  background: var(--primary-light);
-  color: var(--primary);
-  font-size: 12px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  border: 1px solid var(--primary-border);
-}
-.reward-progress-wrap { margin-bottom: 12px; }
-.reward-progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
-.reward-progress-count { font-weight: 700; color: var(--primary); }
-.reward-progress-bar { height: 5px; background: #f0ebe4; border-radius: var(--radius-full); overflow: hidden; }
-.reward-progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), #f97316); border-radius: var(--radius-full); transition: width 1s linear; }
-.reward-rules { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--border-light); }
-.reward-rule { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text-muted); }
-.reward-rule-icon { font-size: 13px; }
-.reward-rule strong { color: var(--text); }
 
 /* Timer Card */
 .session-timer-card {

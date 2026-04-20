@@ -183,7 +183,6 @@
 .stats-td-rate.good { color: var(--good); }
 .stats-td-rate.ok { color: var(--ok); }
 .stats-td-rate.bad { color: var(--bad); }
-.stats-td-points { color: var(--primary); font-weight: 700; }
 
 /* Pagination */
 .stats-pagination { display: flex; align-items: center; gap: 6px; justify-content: center; margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-light); }

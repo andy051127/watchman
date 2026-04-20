@@ -261,8 +261,6 @@ function updateStats() {
     ? (nearestDday.diff === 0 ? 'D-Day!' : `D-${nearestDday.diff}`)
     : '없음';
 
-  // TODO: GET /api/users/me → points
-  document.getElementById('stat-planner-pts').textContent = '0P';
 }
 
 // ── 유틸 ──────────────────────────────────────────────────

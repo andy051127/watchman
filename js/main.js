@@ -1,7 +1,7 @@
 // main.js — 메인 대시보드
 
 // TODO: API에서 사용자 정보 및 세션 데이터 로드
-// GET /api/users/me → { nickname, email, points, streak }
+// GET /api/users/me → { nickname, email, streak }
 // GET /api/sessions/today → [{ focusedTime, distractedTime, focusRate, createdAt }]
 // GET /api/sessions/week → [{ date, totalFocused }]
 // GET /api/sessions/recent?limit=3 → [...]
@@ -57,11 +57,6 @@ function initPage() {
     document.getElementById('stat-streak-card').innerHTML = `
       <div class="stat-card-label">🔥 연속 공부</div>
       <div class="stat-locked-msg">🔒 로그인 필요</div>`;
-    document.getElementById('stat-points-card').innerHTML = `
-      <div class="stat-card-label">⭐ 보유 포인트</div>
-      <div class="stat-locked-msg">🔒 로그인 필요</div>`;
-  } else {
-    document.getElementById('stat-points').textContent = `${user.points.toLocaleString()}P`;
   }
 
   // 최근 세션
@@ -165,7 +160,7 @@ function getGreeting() {
 // ── 데모 데이터 (실제 API로 교체 예정) ──────────────────────
 
 function getDemoUser() {
-  return { nickname: '사용자', points: 0, streak: 0 };
+  return { nickname: '사용자', streak: 0 };
 }
 
 function getDemoSessions() {

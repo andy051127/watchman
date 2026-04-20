@@ -8,22 +8,7 @@ let timerInterval = null;
 let totalSec = 0;
 let focusedSec = 0;
 let distractedSec = 0;
-let sessionPoints = 0;
 const isGuest = new URLSearchParams(window.location.search).get('guest') === '1';
-
-document.addEventListener('DOMContentLoaded', () => {
-  if (!isGuest) {
-    document.getElementById('nav-points-wrap').style.display = 'flex';
-    // TODO: GET /api/users/me → { points }
-    document.getElementById('reward-total-pts').textContent = '0';
-    document.getElementById('nav-total-pts').textContent = '0';
-  } else {
-    // 비회원: 포인트 카드를 게스트 버전으로 교체
-    document.getElementById('reward-card').innerHTML = `
-      <span class="guest-lock-icon">🔒</span>
-      <p class="guest-reward-msg">로그인하면 포인트를 모을 수 있어요</p>`;
-  }
-});
 
 // ── 카메라 버튼 ────────────────────────────────────────────
 
@@ -125,10 +110,9 @@ function endStudy(save = true) {
     // TODO: POST /api/sessions {
     //   focusedTime: focusedSec,
     //   distractedTime: distractedSec,
-    //   focusRate,
-    //   pointsEarned: sessionPoints
+    //   focusRate
     // }
-    console.log('세션 저장 예정:', { focusedSec, distractedSec, focusRate, sessionPoints });
+    console.log('세션 저장 예정:', { focusedSec, distractedSec, focusRate });
   }
 
   window.location.href = 'main.html';
