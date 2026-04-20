@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>스터디 세션 — Watchman</title>
+  <link rel="stylesheet" href="css/global.css" />
+  <link rel="stylesheet" href="css/study-session.css" />
+</head>
+<body>
+<div class="session-page">
+
+  <!-- Distraction overlay (hidden by default) -->
+  <div class="distraction-fullscreen-overlay" id="distraction-overlay" style="display:none"></div>
+
+  <!-- Navbar -->
+  <nav class="session-nav">
+    <a href="main.html" class="session-nav-logo" id="btn-home">
+      <img src="assets/icon.svg" alt="Watchman" class="session-nav-icon" />
+      <span>Watchman</span>
+    </a>
+    <div class="session-nav-center">
+      <div class="session-status-pill idle" id="status-pill">
+        <span class="session-status-dot"></span>
+        <span id="status-label">대기 중</span>
+      </div>
+    </div>
+    <div class="session-nav-right">
+      <div class="nav-points" id="nav-points-wrap" style="display:none">
+        <span class="nav-points-icon">⭐</span>
+        <span class="nav-points-total" id="nav-total-pts">0</span>
+        <span class="nav-points-session" id="nav-session-pts" style="display:none"></span>
+      </div>
+      <span class="session-nav-timer" id="nav-timer" style="display:none">00:00</span>
+      <a href="main.html" class="btn-session-exit">홈</a>
+    </div>
+  </nav>
+
+  <!-- Body -->
+  <div class="session-body">
+
+    <!-- Camera -->
+    <div class="session-camera-wrap">
+      <div class="session-camera-frame" id="camera-frame">
+        <video id="webcam-video" class="session-video" muted playsinline></video>
+
+        <div class="session-cam-off" id="cam-off-msg">
+          <span>📷</span>
+          <p>카메라가 꺼져 있어요</p>
+        </div>
+        <div class="session-loading" id="cam-loading" style="display:none">
+          <div class="session-spinner"></div>
+          <span>카메라 연결 중...</span>
+        </div>
+        <span class="session-badge" id="focus-badge" style="display:none"></span>
+      </div>
+      <p class="session-error" id="cam-error" style="display:none"></p>
+
+      <div class="main-controls">
+        <button class="btn-cam-main active" id="btn-cam" onclick="handleCamBtn()">카메라 켜기</button>
+        <button class="btn-study-main inactive" id="btn-study" onclick="handleStudyBtn()" disabled>스터디 시작하기</button>
+      </div>
+      <p class="controls-hint" id="controls-hint">카메라를 켜면 스터디를 시작할 수 있어요</p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="session-sidebar">
+
+      <!-- 포인트 카드 -->
+      <div class="reward-card" id="reward-card">
+        <div class="reward-card-top">
+          <div>
+            <div class="ssc-label">보유 포인트</div>
+            <div class="reward-total">
+              <span class="reward-icon">⭐</span>
+              <span class="reward-num" id="reward-total-pts">0</span>
+              <span class="reward-unit">P</span>
+            </div>
+          </div>
+          <div class="reward-session-badge" id="reward-session-badge" style="display:none">이번 세션 +0P</div>
+        </div>
+        <div class="reward-progress-wrap">
+          <div class="reward-progress-label">
+            <span>다음 포인트까지</span>
+            <span class="reward-progress-count" id="reward-countdown">집중 중일 때 적립돼요</span>
+          </div>
+          <div class="reward-progress-bar">
+            <div class="reward-progress-fill" id="reward-progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="reward-rules">
+          <div class="reward-rule"><span class="reward-rule-icon">⭐</span><span>30초 집중 시 <strong>+1P</strong></span></div>
+          <div class="reward-rule"><span class="reward-rule-icon">🔥</span><span>5분 연속 집중 <strong>+5P 보너스</strong></span></div>
+          <div class="reward-rule"><span class="reward-rule-icon">💎</span><span>10분 연속 집중 <strong>+10P 보너스</strong></span></div>
+        </div>
+      </div>
+
+      <!-- 타이머 카드 -->
+      <div class="session-timer-card">
+        <div class="ssc-label">스터디 시간</div>
+        <div class="timer-display" id="timer-display">00:00</div>
+        <div class="timer-sub" id="timer-sub">카메라를 켜고 시작해보세요</div>
+      </div>
+
+      <!-- 세션 통계 -->
+      <div class="session-stat-card">
+        <div class="ssc-label">이번 세션</div>
+        <div class="ssc-rows">
+          <div class="ssc-row">
+            <span class="ssc-row-label"><span class="ssc-dot green"></span>집중 시간</span>
+            <span class="ssc-row-val" id="stat-focused-time">00:00</span>
+          </div>
+          <div class="ssc-row">
+            <span class="ssc-row-label"><span class="ssc-dot red"></span>딴짓 시간</span>
+            <span class="ssc-row-val" id="stat-distracted-time">00:00</span>
+          </div>
+          <div class="ssc-row">
+            <span class="ssc-row-label"><span class="ssc-dot orange"></span>집중률</span>
+            <span class="ssc-row-val" id="stat-focus-rate">0%</span>
+          </div>
+        </div>
+        <div class="ssc-bar-wrap" style="margin-top:12px">
+          <div class="ssc-bar-fill good" id="focus-rate-bar" style="width:0%"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="js/study-session.js"></script>
+</body>
+</html>
