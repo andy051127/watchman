@@ -2,6 +2,167 @@
 // MediaPipe 연동은 백엔드 연결 후 구현 예정
 // 현재는 UI 상태 전환 및 타이머만 동작
 
+// ── 음악 플레이어 ──────────────────────────────────────────
+// MP3 파일은 assets/music/ 폴더에 넣으세요.
+// 트랙을 추가하려면 MUSIC_TRACKS 배열에 항목을 추가하면 됩니다.
+
+const MUSIC_TRACKS = [
+  // { name: '트랙 이름', artist: '아티스트', file: 'track1.mp3' },
+  // 예: { name: 'Midnight Study', artist: 'Lofi Fruits', file: 'midnight-study.mp3' },
+];
+
+const musicAudio = new Audio();
+musicAudio.volume = 0.6;
+musicAudio.addEventListener('ended', () => musicNext());
+
+let currentTrackIdx = 0;
+let isMusicPlaying = false;
+let isShuffle = false;
+
+function toggleMusic() {
+  if (MUSIC_TRACKS.length === 0) return;
+  if (isMusicPlaying) {
+    musicAudio.pause();
+    isMusicPlaying = false;
+  } else {
+    if (!musicAudio.src || musicAudio.src === window.location.href) loadTrack(currentTrackIdx, false);
+    musicAudio.play();
+    isMusicPlaying = true;
+  }
+  updateMusicUI();
+}
+
+function musicPrev() {
+  if (MUSIC_TRACKS.length === 0) return;
+  currentTrackIdx = (currentTrackIdx - 1 + MUSIC_TRACKS.length) % MUSIC_TRACKS.length;
+  loadTrack(currentTrackIdx, true);
+}
+
+function musicNext() {
+  if (MUSIC_TRACKS.length === 0) return;
+  if (isShuffle) {
+    let next;
+    do { next = Math.floor(Math.random() * MUSIC_TRACKS.length); } while (next === currentTrackIdx && MUSIC_TRACKS.length > 1);
+    currentTrackIdx = next;
+  } else {
+    currentTrackIdx = (currentTrackIdx + 1) % MUSIC_TRACKS.length;
+  }
+  loadTrack(currentTrackIdx, true);
+}
+
+function loadTrack(idx, andPlay = false) {
+  const t = MUSIC_TRACKS[idx];
+  document.getElementById('music-track-name').textContent = t.name;
+  document.getElementById('music-track-artist').textContent = t.artist;
+  musicAudio.src = `assets/music/${t.file}`;
+  if (andPlay) { musicAudio.play(); isMusicPlaying = true; }
+  updateMusicUI();
+}
+
+function setMusicVolume(val) {
+  document.getElementById('music-vol-pct').textContent = `${val}%`;
+  musicAudio.volume = parseInt(val) / 100;
+}
+
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  document.getElementById('btn-shuffle').classList.toggle('active', isShuffle);
+}
+
+function updateMusicUI() {
+  const btn = document.getElementById('btn-music-play');
+  const hasTrack = MUSIC_TRACKS.length > 0;
+  btn.textContent = isMusicPlaying ? '⏸ 일시정지' : '▶ 재생';
+  btn.classList.toggle('active', isMusicPlaying);
+  btn.disabled = !hasTrack;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  if (MUSIC_TRACKS.length > 0) {
+    document.getElementById('music-track-name').textContent = MUSIC_TRACKS[0].name;
+    document.getElementById('music-track-artist').textContent = MUSIC_TRACKS[0].artist;
+  } else {
+    document.getElementById('music-track-name').textContent = '트랙 없음';
+    document.getElementById('music-track-artist').textContent = 'assets/music/ 에 MP3를 추가하세요';
+  }
+  updateMusicUI();
+});
+
+// ── 앰비언스 믹서 (Web Audio API) ─────────────────────────
+
+let audioCtx = null;
+const ambientNodes = {};
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function makeNoise(ctx, type) {
+  const len = ctx.sampleRate * 3;
+  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  if (type === 'white') {
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+  } else if (type === 'brown') {
+    let last = 0;
+    for (let i = 0; i < len; i++) {
+      const w = Math.random() * 2 - 1;
+      d[i] = (last + 0.02 * w) / 1.02;
+      last = d[i]; d[i] *= 3.5;
+    }
+  } else if (type === 'pink') {
+    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
+    for (let i = 0; i < len; i++) {
+      const w = Math.random() * 2 - 1;
+      b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759;
+      b2 = 0.96900*b2 + w*0.1538520; b3 = 0.86650*b3 + w*0.3104856;
+      b4 = 0.55000*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.0168980;
+      d[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11; b6 = w*0.115926;
+    }
+  }
+  const src = ctx.createBufferSource();
+  src.buffer = buf; src.loop = true;
+  return src;
+}
+
+function createAmbientChain(type) {
+  const ctx = getAudioCtx();
+  const gain = ctx.createGain(); gain.gain.value = 0;
+  let src, f1, f2;
+  if (type === 'rain') {
+    src = makeNoise(ctx, 'white');
+    f1 = ctx.createBiquadFilter(); f1.type = 'lowpass';  f1.frequency.value = 800;
+    f2 = ctx.createBiquadFilter(); f2.type = 'highpass'; f2.frequency.value = 100;
+    src.connect(f1); f1.connect(f2); f2.connect(gain);
+  } else if (type === 'cafe') {
+    src = makeNoise(ctx, 'pink');
+    f1 = ctx.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 1000; f1.Q.value = 0.5;
+    src.connect(f1); f1.connect(gain);
+  } else if (type === 'nature') {
+    src = makeNoise(ctx, 'pink');
+    f1 = ctx.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 400; f1.Q.value = 0.3;
+    src.connect(f1); f1.connect(gain);
+  } else if (type === 'fire') {
+    src = makeNoise(ctx, 'brown');
+    f1 = ctx.createBiquadFilter(); f1.type = 'lowpass'; f1.frequency.value = 400;
+    src.connect(f1); f1.connect(gain);
+  }
+  gain.connect(ctx.destination);
+  src.start();
+  return { src, gain };
+}
+
+function setAmbient(type, val) {
+  document.getElementById(`pct-${type}`).textContent = `${val}%`;
+  const ctx = getAudioCtx();
+  if (ctx.state === 'suspended') ctx.resume();
+  if (!ambientNodes[type]) ambientNodes[type] = createAmbientChain(type);
+  ambientNodes[type].gain.gain.setTargetAtTime(parseInt(val) / 100 * 0.4, ctx.currentTime, 0.1);
+}
+
+// ── 세션 상태 ──────────────────────────────────────────────
+
 let sessionState = 'idle'; // 'idle' | 'camera_on' | 'studying'
 let stream = null;
 let timerInterval = null;

@@ -185,6 +185,108 @@
 .session-sidebar { width: 280px; display: flex; flex-direction: column; gap: 14px; flex-shrink: 0; }
 .ssc-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-light); margin-bottom: 10px; }
 
+/* Music Card */
+.music-card {
+  background: var(--bg-white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+}
+.music-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.music-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: #e8f0fe;
+  color: #3b5bdb;
+}
+.music-badge-green {
+  background: #e6f4ea;
+  color: #2d6a4f;
+}
+.music-track-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.music-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background: #3b5bdb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.music-track-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.music-track-artist { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.music-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.music-btn {
+  flex: 1;
+  padding: 7px 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.music-btn:hover { background: var(--border); }
+.music-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+.music-volume-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.music-vol-label { white-space: nowrap; }
+.music-vol-pct { white-space: nowrap; font-weight: 600; min-width: 28px; text-align: right; }
+.music-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+.music-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--text);
+  cursor: pointer;
+}
+.ambient-rows { display: flex; flex-direction: column; gap: 10px; }
+.ambient-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ambient-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+.ambient-label { width: 58px; flex-shrink: 0; font-size: 12px; color: var(--text); }
+.ambient-pct { min-width: 28px; text-align: right; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+
 /* Timer Card */
 .session-timer-card {
   background: var(--bg-white);

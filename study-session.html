@@ -61,6 +61,67 @@
     <!-- Sidebar -->
     <div class="session-sidebar">
 
+      <!-- 음악 플레이어 -->
+      <div class="music-card">
+        <div class="music-card-header">
+          <span class="ssc-label" style="margin-bottom:0">음악 트랙</span>
+          <span class="music-badge">독립 채널</span>
+        </div>
+        <div class="music-track-info">
+          <div class="music-thumb">🎵</div>
+          <div>
+            <div class="music-track-name" id="music-track-name">Midnight Study Session</div>
+            <div class="music-track-artist" id="music-track-artist">Lofi Fruits Music</div>
+          </div>
+        </div>
+        <div class="music-controls">
+          <button class="music-btn" onclick="musicPrev()">◀◀</button>
+          <button class="music-btn" id="btn-music-play" onclick="toggleMusic()">▶ 재생</button>
+          <button class="music-btn" onclick="musicNext()">▶▶</button>
+          <button class="music-btn" id="btn-shuffle" onclick="toggleShuffle()">셔플</button>
+        </div>
+        <div class="music-volume-row">
+          <span>♪</span>
+          <span class="music-vol-label">음악 볼륨</span>
+          <input type="range" class="music-slider" id="music-volume" min="0" max="100" value="60" oninput="setMusicVolume(this.value)" />
+          <span class="music-vol-pct" id="music-vol-pct">60%</span>
+        </div>
+      </div>
+
+      <!-- 앰비언스 믹서 -->
+      <div class="music-card">
+        <div class="music-card-header">
+          <span class="ssc-label" style="margin-bottom:0">앰비언스 믹서</span>
+          <span class="music-badge music-badge-green">독립 채널</span>
+        </div>
+        <div class="ambient-rows">
+          <div class="ambient-row">
+            <span class="ambient-icon">🌧</span>
+            <span class="ambient-label">빗소리</span>
+            <input type="range" class="music-slider" min="0" max="100" value="0" oninput="setAmbient('rain',this.value)" />
+            <span class="ambient-pct" id="pct-rain">0%</span>
+          </div>
+          <div class="ambient-row">
+            <span class="ambient-icon">☕</span>
+            <span class="ambient-label">카페 소음</span>
+            <input type="range" class="music-slider" min="0" max="100" value="0" oninput="setAmbient('cafe',this.value)" />
+            <span class="ambient-pct" id="pct-cafe">0%</span>
+          </div>
+          <div class="ambient-row">
+            <span class="ambient-icon">🌿</span>
+            <span class="ambient-label">자연 소리</span>
+            <input type="range" class="music-slider" min="0" max="100" value="0" oninput="setAmbient('nature',this.value)" />
+            <span class="ambient-pct" id="pct-nature">0%</span>
+          </div>
+          <div class="ambient-row">
+            <span class="ambient-icon">🔥</span>
+            <span class="ambient-label">장작불</span>
+            <input type="range" class="music-slider" min="0" max="100" value="0" oninput="setAmbient('fire',this.value)" />
+            <span class="ambient-pct" id="pct-fire">0%</span>
+          </div>
+        </div>
+      </div>
+
       <!-- 타이머 카드 -->
       <div class="session-timer-card">
         <div class="ssc-label">스터디 시간</div>
