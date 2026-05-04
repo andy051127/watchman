@@ -2,13 +2,10 @@
 // MediaPipe 연동은 백엔드 연결 후 구현 예정
 // 현재는 UI 상태 전환 및 타이머만 동작
 
-// ── 음악 플레이어 ──────────────────────────────────────────
-// MP3 파일은 assets/music/ 폴더에 넣으세요.
-// 트랙을 추가하려면 MUSIC_TRACKS 배열에 항목을 추가하면 됩니다.
-
 const MUSIC_TRACKS = [
-  // { name: '트랙 이름', artist: '아티스트', file: 'track1.mp3' },
-  // 예: { name: 'Midnight Study', artist: 'Lofi Fruits', file: 'midnight-study.mp3' },
+  {name: 'Space', artist: 'Charlieonnafirday', file: 'Space.mp3'},
+  {name: 'Side Effects', artist: 'Zayn', file: 'Side-effects.mp3'},
+  {name: 'Planez', artist: 'Jeremih', file: 'Planez.mp3'},
 ];
 
 const musicAudio = new Audio();
@@ -88,77 +85,36 @@ document.addEventListener('DOMContentLoaded', () => {
   updateMusicUI();
 });
 
-// ── 앰비언스 믹서 (Web Audio API) ─────────────────────────
+// ── 앰비언스 믹서 (MP3) ─────────────────────────────────────
+// MP3 파일은 assets/ambient/ 폴더에 넣으세요.
+// 파일명: rain.mp3 / cafe.mp3 / nature.mp3 / fire.mp3
 
-let audioCtx = null;
-const ambientNodes = {};
+const AMBIENT_FILES = {
+  rain:   'assets/ambient/rain.mp3',
+  cafe:   'assets/ambient/cafe.mp3',
+  nature: 'assets/ambient/nature.mp3',
+  fire:   'assets/ambient/fire.mp3',
+};
 
-function getAudioCtx() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
+const ambientAudios = {};
 
-function makeNoise(ctx, type) {
-  const len = ctx.sampleRate * 3;
-  const buf = ctx.createBuffer(1, len, ctx.sampleRate);
-  const d = buf.getChannelData(0);
-  if (type === 'white') {
-    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
-  } else if (type === 'brown') {
-    let last = 0;
-    for (let i = 0; i < len; i++) {
-      const w = Math.random() * 2 - 1;
-      d[i] = (last + 0.02 * w) / 1.02;
-      last = d[i]; d[i] *= 3.5;
-    }
-  } else if (type === 'pink') {
-    let b0=0,b1=0,b2=0,b3=0,b4=0,b5=0,b6=0;
-    for (let i = 0; i < len; i++) {
-      const w = Math.random() * 2 - 1;
-      b0 = 0.99886*b0 + w*0.0555179; b1 = 0.99332*b1 + w*0.0750759;
-      b2 = 0.96900*b2 + w*0.1538520; b3 = 0.86650*b3 + w*0.3104856;
-      b4 = 0.55000*b4 + w*0.5329522; b5 = -0.7616*b5 - w*0.0168980;
-      d[i] = (b0+b1+b2+b3+b4+b5+b6+w*0.5362)*0.11; b6 = w*0.115926;
-    }
+function getAmbientAudio(type) {
+  if (!ambientAudios[type]) {
+    const audio = new Audio(AMBIENT_FILES[type]);
+    audio.loop = true;
+    audio.volume = 0;
+    ambientAudios[type] = audio;
   }
-  const src = ctx.createBufferSource();
-  src.buffer = buf; src.loop = true;
-  return src;
-}
-
-function createAmbientChain(type) {
-  const ctx = getAudioCtx();
-  const gain = ctx.createGain(); gain.gain.value = 0;
-  let src, f1, f2;
-  if (type === 'rain') {
-    src = makeNoise(ctx, 'white');
-    f1 = ctx.createBiquadFilter(); f1.type = 'lowpass';  f1.frequency.value = 800;
-    f2 = ctx.createBiquadFilter(); f2.type = 'highpass'; f2.frequency.value = 100;
-    src.connect(f1); f1.connect(f2); f2.connect(gain);
-  } else if (type === 'cafe') {
-    src = makeNoise(ctx, 'pink');
-    f1 = ctx.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 1000; f1.Q.value = 0.5;
-    src.connect(f1); f1.connect(gain);
-  } else if (type === 'nature') {
-    src = makeNoise(ctx, 'pink');
-    f1 = ctx.createBiquadFilter(); f1.type = 'bandpass'; f1.frequency.value = 400; f1.Q.value = 0.3;
-    src.connect(f1); f1.connect(gain);
-  } else if (type === 'fire') {
-    src = makeNoise(ctx, 'brown');
-    f1 = ctx.createBiquadFilter(); f1.type = 'lowpass'; f1.frequency.value = 400;
-    src.connect(f1); f1.connect(gain);
-  }
-  gain.connect(ctx.destination);
-  src.start();
-  return { src, gain };
+  return ambientAudios[type];
 }
 
 function setAmbient(type, val) {
   document.getElementById(`pct-${type}`).textContent = `${val}%`;
-  const ctx = getAudioCtx();
-  if (ctx.state === 'suspended') ctx.resume();
-  if (!ambientNodes[type]) ambientNodes[type] = createAmbientChain(type);
-  ambientNodes[type].gain.gain.setTargetAtTime(parseInt(val) / 100 * 0.4, ctx.currentTime, 0.1);
+  const volume = parseInt(val) / 100;
+  const audio = getAmbientAudio(type);
+  audio.volume = volume;
+  if (volume > 0 && audio.paused) audio.play();
+  if (volume === 0 && !audio.paused) audio.pause();
 }
 
 // ── 세션 상태 ──────────────────────────────────────────────
