@@ -96,7 +96,7 @@
                 <!-- JS로 채워짐 -->
               </div>
               <div class="todo-add-row">
-                <input type="text" class="todo-add-input" id="todo-input" placeholder="할 일 추가..." onkeydown="if(event.key==='Enter') addTodo()" />
+                <input type="text" class="todo-add-input" id="todo-input" placeholder="할 일 추가..." onkeydown="if(event.key==='Enter' && !event.isComposing) addTodo()" />
                 <button class="todo-add-btn" onclick="addTodo()">+</button>
               </div>
             </div>
