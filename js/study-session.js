@@ -86,8 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ── 앰비언스 믹서 (MP3) ─────────────────────────────────────
-// MP3 파일은 assets/ambient/ 폴더에 넣으세요.
-// 파일명: rain.mp3 / cafe.mp3 / nature.mp3 / fire.mp3
 
 const AMBIENT_FILES = {
   rain:   'assets/ambient/rain.mp3',
